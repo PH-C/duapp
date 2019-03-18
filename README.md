@@ -2,7 +2,7 @@
 
 
 ### 项目
-**项目地址**：[https://github.com/k-water/egg-blog](https://github.com/PH-C/duapp)(喜欢的请点个star^_^)
+**项目地址**：[https://github.com/PH-C/duapp](https://github.com/PH-C/duapp)(喜欢的请点个star^_^)
 
 **运行**
 
