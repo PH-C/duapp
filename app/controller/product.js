@@ -49,7 +49,7 @@ class ProductController extends Controller {
     const {
       ctx,
     } = this;
-    const id = ctx.params.id;
+    const id = +ctx.params.id;
     ctx.body = await ctx.service.product.find(id);
   }
 

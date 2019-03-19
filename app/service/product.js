@@ -151,7 +151,11 @@ class ProductService extends Service {
         where:{
           sellState:0
         },
-        order: ['price', 'DESC'],
+        order: [
+          ['price', 'ASC']
+        ],
+        separate: true,
+       
         // attributes: [ 'id', 'username' ],
         // include: [{
         //   model: this.ctx.model.Authority,
@@ -159,6 +163,8 @@ class ProductService extends Service {
         // }],
       }],
     });
+
+    console.log("product", Product)
   
     if (!Product) {
       return Object.assign(ERROR, {
