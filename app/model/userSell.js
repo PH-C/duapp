@@ -24,9 +24,9 @@ module.exports = app => {
     created_at: DATE,
     updated_at: DATE,
     sellState:{
-      type: BOOLEAN,
+      type: INTEGER,
       allowNull: false, 
-      defaultValue: false
+      defaultValue: 0
     }
   });
 

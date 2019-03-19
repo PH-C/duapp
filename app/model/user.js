@@ -36,6 +36,9 @@ module.exports = app => {
     app.model.User.hasMany(app.model.Comment, {
       as: 'comments',
     });
+    app.model.User.hasMany(app.model.Collect, {
+      as: 'collects',
+    });
     app.model.User.hasMany(app.model.UserSell, {
       as: 'usersells',
     });

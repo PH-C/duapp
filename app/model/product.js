@@ -75,6 +75,9 @@ module.exports = app => {
     app.model.Product.hasMany(app.model.UserSell, {
       as: 'sellist',
     });
+    app.model.Product.hasMany(app.model.Collect, {
+      as: 'collects',
+    });
   };
 
  

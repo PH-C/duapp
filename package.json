@@ -31,6 +31,7 @@
   },
   "scripts": {
     "start": "egg-scripts start --daemon --env=prod --port=7002 --title=egg-server-blog",
+    "start-prod": "egg-scripts start --daemon",
     "stop": "egg-scripts stop --title=egg-server-blog",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",

@@ -17,6 +17,13 @@ class CollectController extends Controller {
     ctx.body = await ctx.service.collect.list(ctx.query);
   }
 
+  async currentUserCollectlist(){
+    const {
+      ctx,
+    } = this;
+    ctx.body = await ctx.service.collect.currentUserCollectlist(ctx.query);
+  }
+
   async destroy() {
     const {
       ctx,

@@ -6,4 +6,5 @@ module.exports = app => {
   app.del('/api/collect/:id', 'collect.destroy');
   app.get('/api/collect/:id', 'collect.find');
   app.put('/api/collect/:id', 'collect.update');
+  app.get('/api/users/collect', 'collect.currentUserCollectlist')
 };

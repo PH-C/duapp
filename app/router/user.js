@@ -3,6 +3,8 @@
 module.exports = app => {
   app.post('/api/users/register', 'user.create');
   app.del('/api/users/:id', 'user.destroy');
+  app.put('/api/users/recharge', 'user.recharge');
+  app.put('/api/users/pay', 'user.pay');
   app.put('/api/users/:id', 'user.update');
   app.post('/api/users/login', 'user.login');
   app.get('/api/users/:id', 'user.find');

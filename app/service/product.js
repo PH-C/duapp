@@ -144,15 +144,14 @@ class ProductService extends Service {
   }
 
   async find(id) {
-    let order_by = 'price';
-    let order = 'Asc';
     const Product = await this.ctx.model.Product.findById(id, {
       include: [{
         model: this.ctx.model.UserSell,
         as: 'sellist',
-        order: [
-          [ order_by, order.toUpperCase() ],
-        ],
+        where:{
+          sellState:0
+        },
+        order: ['price', 'DESC'],
         // attributes: [ 'id', 'username' ],
         // include: [{
         //   model: this.ctx.model.Authority,

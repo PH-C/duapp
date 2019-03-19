@@ -95,6 +95,86 @@ class UserService extends Service {
     }
   }
 
+  async recharge({
+    money = 0
+  }) {
+    const {
+      ctx,
+    } = this;
+    const user = this.ctx.session.user;
+    console.log("userId", user)
+    if(!user) {
+      return {
+        code:400,
+        msg:"未登录"
+      }
+    }
+    try {
+      const userDB = await ctx.model.User.findById(user.id);
+      if (!userDB) {
+        ctx.status = 400;
+        return Object.assign(ERROR, {
+          msg: 'user not found',
+        });
+      }
+
+      if(money){
+        money = money + userDB.money
+      }
+     
+      const res = await userDB.update({ money: money});
+      ctx.status = 200;
+      return Object.assign(SUCCESS, {
+        data: res,
+        msg:"充值成功!"
+      });
+
+    } catch (error) {
+      ctx.throw(500);
+    }
+  }
+
+  async pay({
+    money = 0
+  }){
+    const {
+      ctx,
+    } = this;
+    const user = this.ctx.session.user;
+    console.log("userId", user)
+    if(!user) {
+      return {
+        code:400,
+        msg:"未登录"
+      }
+    }
+    try {
+      const userDB = await ctx.model.User.findById(user.id);
+      if (!userDB) {
+        ctx.status = 400;
+        return Object.assign(ERROR, {
+          msg: 'user not found',
+        });
+      }
+
+      
+      money = userDB.money - money 
+      if(money<0){
+        return {...ERROR,msg:"余额不足，请充值！"}
+      }
+    
+      const res = await userDB.update({ money: money});
+      ctx.status = 200;
+      return Object.assign(SUCCESS, {
+        data: res,
+        msg:"支付成功!"
+      });
+
+    } catch (error) {
+      ctx.throw(500);
+    }
+  }
+
   async login({ username, password }) {
     const {
       ctx,

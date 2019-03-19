@@ -6,8 +6,8 @@ const {
   SUCCESS,
   unique,
 } = require('../util/util');
-class UserSellService extends Service {
-  async create(UserSell) {
+class UserOrderService extends Service {
+  async create(UserOrder) {
     const {
       ctx,
     } = this;
@@ -21,7 +21,12 @@ class UserSellService extends Service {
     }
 
     try {
-      const res = await this.ctx.model.UserSell.create({...UserSell, user_id:user.id});
+      const res = await this.ctx.model.UserOrder.create({...UserOrder, user_id:user.id});
+      //下单后需要更新卖单的状态由未出售到未发货
+      const usersell = await this.ctx.model.UserSell.findById(UserOrder.usersell_id);
+      usersell.update({
+        sellState:1
+      });
       return Object.assign({
         data: res,
       }, SUCCESS);
@@ -59,19 +64,40 @@ class UserSellService extends Service {
     if (state) {
       options.where = {
         ...options.where,
-        sellState:state
+        orderState:state
       }
     }
 
     console.log("options", options)
    
-    const res = await this.ctx.model.UserSell.findAndCountAll(options);
+    const res = await this.ctx.model.UserOrder.findAndCountAll(Object.assign(options, {
+      include: [{
+        model: this.ctx.model.User,
+        as: 'user',
+        attributes: [ 'id', 'username' ],
+        include: [{
+          model: this.ctx.model.Authority,
+          attributes: [ 'id', 'name' ],
+        }],
+      },{
+        model: this.ctx.model.UserSell,
+        as: 'usersell',
+        include:[{
+          model: this.ctx.model.User,
+          as: 'user',
+          attributes: [ 'id', 'username' ],
+        },{
+          model: this.ctx.model.Product,
+          as: 'product'
+        }]
+      }],
+    }));
     return Object.assign(SUCCESS, {
       data: res,
     });
   }
 
-  async findCurrentUserSell({
+  async findCurrentUserOrder({
     page = 1,
     pageSize = 10,
     state = '',
@@ -108,13 +134,12 @@ class UserSellService extends Service {
     if (state) {
       options.where = {
         ...options.where,
-        sellState:state
+        orderState:state
       }
     }
 
     console.log("options", options)
-   
-    const res = await this.ctx.model.UserSell.findAndCountAll(Object.assign(options, {
+    const res = await this.ctx.model.UserOrder.findAndCountAll(Object.assign(options, {
       include: [{
         model: this.ctx.model.User,
         as: 'user',
@@ -124,43 +149,21 @@ class UserSellService extends Service {
           attributes: [ 'id', 'name' ],
         }],
       },{
-        model: this.ctx.model.Product,
-        as: 'product'
+        model: this.ctx.model.UserSell,
+        as: 'usersell',
+        include:[{
+          model: this.ctx.model.User,
+          as: 'user',
+          attributes: [ 'id', 'username' ],
+        },{
+          model: this.ctx.model.Product,
+          as: 'product'
+        }]
       }],
     }));
     return Object.assign(SUCCESS, {
       data: res,
     });
-  }
-
-  async cancelSell({
-    id,
-  }) {
-    const user = this.ctx.session.user;
-    console.log("userId cancelSell", user)
-    if(!user) {
-      return {
-        code:400,
-        msg:"未登录"
-      }
-    }
-    const UserSell = await this.ctx.model.UserSell.findById(id);
-    console.log("UserSell.sellState", UserSell.sellState)
-    if (!UserSell) {
-      return Object.assign({
-        error_msg: 'UserSell not found',
-      }, ERROR);
-    }
-    
-  
-    if(parseInt(UserSell.sellState)>0){
-      return {...ERROR,msg: '订单已经出售，不能撤回!',}
-    }else{
-      UserSell.destroy();
-      return SUCCESS;
-    }
-   
-
   }
 
   async del({
@@ -174,13 +177,13 @@ class UserSellService extends Service {
         msg:"未登录"
       }
     }
-    const UserSell = await this.ctx.model.UserSell.findById(id);
-    if (!UserSell) {
-      return Object.assign({
-        error_msg: 'UserSell not found',
-      }, ERROR);
+    const UserOrder = await this.ctx.model.UserOrder.findById(id);
+    if (!UserOrder) {
+      return Object.assign(ERROR,{
+        msg: 'UserOrder not found',
+      });
     }
-    UserSell.destroy();
+    UserOrder.destroy();
     return SUCCESS;
 
   }
@@ -197,30 +200,19 @@ class UserSellService extends Service {
         msg:"未登录"
       }
     }
-    const userSell = await this.ctx.model.UserSell.findById(id);
-    if (!userSell) {
+    const UserOrder = await this.ctx.model.UserOrder.findById(id);
+    if (!UserOrder) {
       return Object.assign(ERROR, {
-        msg: 'userSell not found',
+        msg: 'UserOrder not found',
       });
     }
-    userSell.update(updates);
-    //更新这个卖单对应的买单的状态。如果卖家更新状态为,未发货1，已发货对应状态为2，已完成3，对应买家订单也更新为2或3
-    if(updates.sellState){
-      const userSellOrder = await this.ctx.model.UserOrder.findOne({
-        where: {
-          usersell_id: id
-        }
-      });
-      userSellOrder.update({
-        orderState:updates.sellState
-      })
-    }
+    UserOrder.update(updates);
     return SUCCESS;
 
   }
 
   async find(id) {
-    const UserSell = await this.ctx.model.UserSell.findById(id,{
+    const UserOrder = await this.ctx.model.UserOrder.findById(id,{
       include: [{
         model: this.ctx.model.User,
         as: 'user',
@@ -235,26 +227,26 @@ class UserSellService extends Service {
       }],
     });
   
-    if (!UserSell) {
+    if (!UserOrder) {
       return Object.assign(ERROR, {
-        msg: 'UserSell not found',
+        msg: 'UserOrder not found',
       });
     }
     return Object.assign(SUCCESS, {
-      data: UserSell,
+      data: UserOrder,
     });
 
   }
 
   async edit(id) {
-    const UserSell = await this.ctx.model.UserSell.findById(id);
-    if (!UserSell) {
+    const UserOrder = await this.ctx.model.UserOrder.findById(id);
+    if (!UserOrder) {
       return Object.assign(ERROR, {
-        msg: 'UserSell not found',
+        msg: 'UserOrder not found',
       });
     }
     return Object.assign(SUCCESS, {
-      data: UserSell,
+      data: UserOrder,
     });
 
   }
@@ -262,4 +254,4 @@ class UserSellService extends Service {
  
 }
 
-module.exports = UserSellService;
+module.exports = UserOrderService;

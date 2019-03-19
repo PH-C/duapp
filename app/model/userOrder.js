@@ -20,6 +20,11 @@ module.exports = app => {
     price: {
       type: FLOAT,
     },
+    orderState:{
+      type: INTEGER,
+      allowNull: false, 
+      defaultValue: 1
+    },
     created_at: DATE,
     updated_at: DATE,
   });

@@ -12,13 +12,14 @@ module.exports = app => {
       primaryKey: true,
       autoIncrement: true,
     },
-    author: STRING,
-    date: STRING,
-    link: STRING,
-    title: STRING,
     created_at: DATE,
     updated_at: DATE,
   });
+
+  Collect.associate = function() {
+    app.model.Collect.belongsTo(app.model.User);
+    app.model.Collect.belongsTo(app.model.Product);
+  };
 
   return Collect;
 };

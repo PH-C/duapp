@@ -34,8 +34,6 @@ class TopicService extends Service {
   async index({
     page = 1,
     pageSize = 10,
-    offset = 0,
-    limit = 5,
     order_by = 'created_at',
     order = 'DESC',
   }) {

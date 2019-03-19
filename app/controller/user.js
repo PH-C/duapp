@@ -30,6 +30,24 @@ class UserController extends Controller {
     });
   }
 
+  async recharge(){
+    const {
+      ctx,
+    } = this;
+    const id = +ctx.params.id;
+    const user = ctx.request.body;
+    ctx.body = await ctx.service.user.recharge(user);
+  }
+
+  async pay(){
+    const {
+      ctx,
+    } = this;
+    const id = +ctx.params.id;
+    const user = ctx.request.body;
+    ctx.body = await ctx.service.user.pay(user);
+  }
+
   async login() {
     const {
       ctx,
