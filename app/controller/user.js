@@ -62,6 +62,20 @@ class UserController extends Controller {
     });
   }
 
+  async adminLogin() {
+    const {
+      ctx,
+    } = this;
+    const {
+      username,
+      password,
+    } = ctx.request.body;
+    ctx.body = await ctx.service.user.adminLogin({
+      username,
+      password,
+    });
+  }
+
   async find() {
     const {
       ctx,

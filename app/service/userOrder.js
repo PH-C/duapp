@@ -245,10 +245,18 @@ class UserOrderService extends Service {
       }
     }
     const UserOrder = await this.ctx.model.UserOrder.findById(id);
+
     if (!UserOrder) {
       return Object.assign(ERROR, {
         msg: 'UserOrder not found',
       });
+    }
+    //订单状态为3即买家确认收货同时将对应卖单的状态修改为3
+    if(updates.orderState===3){
+      const userSell = await this.ctx.model.UserSell.findById(UserOrder.usersell_id);
+      userSell.update({
+        sellState:updates.orderState
+      })
     }
     UserOrder.update(updates);
     return SUCCESS;

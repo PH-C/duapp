@@ -11,3 +11,4 @@ exports.cors = {
   package: 'egg-cors',
 };
 
+

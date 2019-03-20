@@ -7,6 +7,7 @@ module.exports = app => {
   app.put('/api/users/pay', 'user.pay');
   app.put('/api/users/:id', 'user.update');
   app.post('/api/users/login', 'user.login');
+  app.post('/api/users/adminlogin','user.adminLogin')
   app.get('/api/users/:id', 'user.find');
   app.get('/api/users/:id/edit', 'user.find');
 };

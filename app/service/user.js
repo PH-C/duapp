@@ -175,6 +175,60 @@ class UserService extends Service {
     }
   }
 
+  async adminLogin({ username, password }) {
+    const {
+      ctx,
+    } = this;
+    try {
+      const user = await ctx.model.User.findOne({
+        where: {
+          username: username.toString()
+        },
+      });
+      if (!user) {
+        return Object.assign(ERROR, {
+          msg: 'username is error',
+        });
+      }
+      if(user.authority_id!=1){
+        return Object.assign(ERROR, {
+          msg: '您没有权限',
+        });
+      }
+      if (md5(password) === user.password) {
+        ctx.status = 200;
+        const hash = md5.hex(password)
+        // ctx.cookies.set('token', hash, {
+        //   httpOnly: false,
+        //   signed: false,
+        //   maxAge: 3600 * 1000,
+        //   path: '/',
+        // });
+        ctx.session.user = user;
+
+        // ctx.cookies.set('user_id', user.id, {
+        //   httpOnly: false,
+        //   signed: false,
+        //   maxAge: 3600 * 1000,
+        //   path: '/',
+        // });
+        return Object.assign(SUCCESS, {
+          data: Object.assign(user, {
+            password: '',
+          }),
+        });
+      }
+      return Object.assign(ERROR, {
+        msg: 'password is error',
+      });
+
+
+    } catch (error) {
+      ctx.status = 500;
+      throw (error);
+    }
+  }
+
   async login({ username, password }) {
     const {
       ctx,
@@ -188,6 +242,11 @@ class UserService extends Service {
       if (!user) {
         return Object.assign(ERROR, {
           msg: 'username is error',
+        });
+      }
+      if(user.authority_id!=2){
+        return Object.assign(ERROR, {
+          msg: '您没有管理员权限',
         });
       }
       if (md5(password) === user.password) {

@@ -204,8 +204,9 @@ class UserSellService extends Service {
       });
     }
     userSell.update(updates);
-    //更新这个卖单对应的买单的状态。如果卖家更新状态为,未发货1，已发货对应状态为2，已完成3，对应买家订单也更新为2或3
-    if(updates.sellState){
+    //更新这个卖单对应的买单的状态。如果卖家更新状态为,未发货1，已发货对应状态为2，已完成3，
+    //这里只允许卖家发货，卖家不能确认完成订单，买家确认收货后才完成订单
+    if(updates.sellState===2){
       const userSellOrder = await this.ctx.model.UserOrder.findOne({
         where: {
           usersell_id: id

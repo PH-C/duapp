@@ -33,6 +33,8 @@ module.exports = appInfo => {
     credentials: true,
   };
 
+
+
   // config.alinode = {
   //   enable: true,
   //   appid: '78367',

@@ -20,6 +20,9 @@ module.exports = app => {
     password: {
       type: STRING,
     },
+    avatar: {
+      type: STRING, 
+    },
     money: {
       type: FLOAT,
       allowNull: false, 
