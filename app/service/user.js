@@ -190,9 +190,9 @@ class UserService extends Service {
           msg: 'username is error',
         });
       }
-      if(user.authority_id!=1){
+      if(user.authority_id!=2){
         return Object.assign(ERROR, {
-          msg: '您没有权限',
+          msg: '您没有管理员权限',
         });
       }
       if (md5(password) === user.password) {
@@ -244,9 +244,9 @@ class UserService extends Service {
           msg: 'username is error',
         });
       }
-      if(user.authority_id!=2){
+      if(user.authority_id!=1){
         return Object.assign(ERROR, {
-          msg: '您没有管理员权限',
+          msg: '您没有权限',
         });
       }
       if (md5(password) === user.password) {
