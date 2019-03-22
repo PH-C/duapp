@@ -18,6 +18,18 @@ class CollectService extends Service {
         msg:"未登录"
       }
     }
+    const favor = await ctx.model.Collect.find({
+      where:{
+        user_id: user.id,
+        product_id: collect.product_id
+      }
+    });
+
+    if(favor){
+      return Object.assign(ERROR, {
+        msg: "您已经收藏过了",
+      });
+    }
     try {
       const created = await ctx.model.Collect.create({...collect,user_id: user.id});
       ctx.status = 201;
