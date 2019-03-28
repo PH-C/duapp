@@ -66,8 +66,8 @@ class CollectService extends Service {
         include: [{
           model: this.ctx.model.User,
           as: 'user',
-          attributes: [ 'id', 'username' ],
-          include: [{
+          attributes: [ 'id', 'username','avatar' ],
+            include: [{
             model: this.ctx.model.Authority,
             attributes: [ 'id', 'name' ],
           }],
@@ -119,7 +119,7 @@ class CollectService extends Service {
         include: [{
           model: this.ctx.model.User,
           as: 'user',
-          attributes: [ 'id', 'username' ],
+          attributes: [ 'id', 'username','avatar' ],
           include: [{
             model: this.ctx.model.Authority,
             attributes: [ 'id', 'name' ],
@@ -160,6 +160,36 @@ class CollectService extends Service {
     }
   }
 
+  async uncollect(collect){
+    const {
+      ctx,
+    } = this;
+    const user = this.ctx.session.user;
+    console.log("userId", user)
+    if(!user) {
+      return {
+        code:400,
+        msg:"未登录"
+      }
+    }
+    const favor = await ctx.model.Collect.find({
+      where:{
+        user_id: user.id,
+        product_id: collect.product_id
+      }
+    });
+
+    if(!favor){
+      return Object.assign(ERROR, {
+        msg: "您没有收藏",
+      });
+    }
+    favor.destroy();
+    return Object.assign(SUCCESS, {
+      msg: "取消收藏成功",
+    });
+  }
+
   async find(id) {
     const {
       ctx,
@@ -169,7 +199,7 @@ class CollectService extends Service {
         include: [{
           model: this.ctx.model.User,
           as: 'user',
-          attributes: [ 'id', 'username' ],
+          attributes: [ 'id', 'username','avatar' ],
           include: [{
             model: this.ctx.model.Authority,
             attributes: [ 'id', 'name' ],

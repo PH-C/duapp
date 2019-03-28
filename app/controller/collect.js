@@ -31,6 +31,13 @@ class CollectController extends Controller {
     ctx.body = await ctx.service.collect.del(ctx.params.id);
   }
 
+  async uncollect(){
+    const {
+      ctx,
+    } = this;
+    ctx.body = await ctx.service.collect.uncollect(ctx.request.body);
+  }
+
   async find() {
     const {
       ctx,

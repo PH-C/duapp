@@ -99,6 +99,43 @@ class CommentService extends Service {
       throw (error);
     }
   }
+
+  async praise({
+    id,
+  }){
+
+    const {
+      ctx,
+    } = this;
+    const user = this.ctx.session.user;
+    console.log("userId", user)
+    if(!user) {
+      return {
+        code:400,
+        msg:"未登录"
+      }
+    }
+    // const user_id = user.id;
+
+    const comment = await ctx.model.Comment.findById(id);
+    if (!comment) {
+      ctx.status = 400;
+      return Object.assign(ERROR, {
+        msg: 'comment is not exists',
+      });
+    }
+
+    comment.increment('like').then().catch(err => {
+      console.log(err);
+    });
+
+    ctx.status = 200;
+    return Object.assign(SUCCESS, {
+      msg: "点赞成功!",
+    });
+   
+
+  }
 }
 
 module.exports = CommentService;

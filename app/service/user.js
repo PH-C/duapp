@@ -95,6 +95,47 @@ class UserService extends Service {
     }
   }
 
+  async updateLoginUser({ user }){
+    const {
+      ctx,
+    } = this;
+
+    const auth = this.ctx.session.user;
+    console.log("userId", auth)
+    if(!auth) {
+      return {
+        code:400,
+        msg:"未登录"
+      }
+    }
+
+    try {
+      const userDB = await ctx.model.User.findById(auth.id);
+      if (!userDB) {
+        ctx.status = 400;
+        return Object.assign(ERROR, {
+          msg: 'user not found',
+        });
+      }
+
+      if(user.password){
+        const md5Passwd = md5(user.password)
+        user = Object.assign(user, {
+          password: md5Passwd,
+        });
+      }
+     
+      const res = await userDB.update(user);
+      ctx.status = 200;
+      return Object.assign(SUCCESS, {
+        data: res,
+      });
+
+    } catch (error) {
+      ctx.throw(500);
+    }
+  }
+
   async recharge({
     money = 0
   }) {
@@ -303,6 +344,38 @@ class UserService extends Service {
       ctx.status = 200;
       return Object.assign(SUCCESS, {
         data: user,
+      });
+
+    } catch (error) {
+      throw (500);
+    }
+  }
+
+  async findLoginUser(){
+    const {
+      ctx,
+    } = this;
+
+    const user = this.ctx.session.user;
+    console.log("findLoginUser", user)
+    if(!user) {
+      return {
+        code:400,
+        msg:"未登录"
+      }
+    }
+
+    try {
+      const userDB = await ctx.model.User.findById(user.id);
+      if (!userDB) {
+        ctx.status = 401;
+        return Object.assign(ERROR, {
+          msg: 'user not found',
+        });
+      }
+      ctx.status = 200;
+      return Object.assign(SUCCESS, {
+        data: userDB,
       });
 
     } catch (error) {

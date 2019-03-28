@@ -88,7 +88,7 @@ class UserOrderService extends Service {
       include: [{
         model: this.ctx.model.User,
         as: 'user',
-        attributes: [ 'id', 'username' ],
+        attributes: [ 'id', 'username','avatar' ],
         include: [{
           model: this.ctx.model.Authority,
           attributes: [ 'id', 'name' ],
@@ -99,7 +99,7 @@ class UserOrderService extends Service {
         include:[{
           model: this.ctx.model.User,
           as: 'user',
-          attributes: [ 'id', 'username' ],
+          attributes: [ 'id', 'username','avatar' ],
         },{
           model: this.ctx.model.Product,
           as: 'product'
@@ -178,7 +178,7 @@ class UserOrderService extends Service {
       include: [{
         model: this.ctx.model.User,
         as: 'user',
-        attributes: [ 'id', 'username' ],
+        attributes: [ 'id', 'username','avatar' ],
         include: [{
           model: this.ctx.model.Authority,
           attributes: [ 'id', 'name' ],
@@ -189,7 +189,7 @@ class UserOrderService extends Service {
         include:[{
           model: this.ctx.model.User,
           as: 'user',
-          attributes: [ 'id', 'username' ],
+          attributes: [ 'id', 'username','avatar' ],
         },{
           model: this.ctx.model.Product,
           as: 'product'
@@ -268,7 +268,7 @@ class UserOrderService extends Service {
       include: [{
         model: this.ctx.model.User,
         as: 'user',
-        attributes: [ 'id', 'username' ],
+        attributes: [ 'id', 'username','avatar' ],
         include: [{
           model: this.ctx.model.Authority,
           attributes: [ 'id', 'name' ],

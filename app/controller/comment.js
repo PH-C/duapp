@@ -20,6 +20,16 @@ class CommentController extends Controller {
       id,
     });
   }
+
+  async praise(){
+    const {
+      ctx,
+    } = this;
+    const id = ctx.params.id;
+    ctx.body = await ctx.service.comment.praise({
+      id,
+    });
+  }
 }
 
 module.exports = CommentController;

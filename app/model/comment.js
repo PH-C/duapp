@@ -16,6 +16,10 @@ module.exports = app => {
     content: {
       type: STRING,
     },
+    like: {
+      type: INTEGER,
+      defaultValue: 0,
+    },
     created_at: DATE,
     updated_at: DATE,
   });

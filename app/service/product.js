@@ -175,7 +175,15 @@ class ProductService extends Service {
   }
 
   async find(id) {
-    const Product = await this.ctx.model.Product.findById(id, {
+    const user = this.ctx.session.user;
+    console.log("userId", user)
+    if(!user) {
+      return {
+        code:400,
+        msg:"未登录"
+      }
+    }
+    const product = await this.ctx.model.Product.findById(id, {
       include: [{
         model: this.ctx.model.UserSell,
         as: 'sellist',
@@ -195,15 +203,29 @@ class ProductService extends Service {
       }],
     });
 
-    console.log("product", Product)
+    console.log("product", product)
   
-    if (!Product) {
+    if (!product) {
       return Object.assign(ERROR, {
-        msg: 'Product not found',
+        msg: 'product not found',
       });
     }
+    let collect = false;
+    const col = await this.ctx.model.Collect.findOne({
+      where:{
+        user_id: user.id,
+        product_id: id
+      }
+    })
+
+    if(col){
+      collect = true
+    } else {
+      collect = false
+    }
     return Object.assign(SUCCESS, {
-      data: Product,
+      data: product,
+      collect
     });
 
   }

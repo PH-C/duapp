@@ -118,7 +118,7 @@ class UserSellService extends Service {
       include: [{
         model: this.ctx.model.User,
         as: 'user',
-        attributes: [ 'id', 'username' ],
+        attributes: [ 'id', 'username','avatar' ],
         include: [{
           model: this.ctx.model.Authority,
           attributes: [ 'id', 'name' ],
@@ -225,7 +225,7 @@ class UserSellService extends Service {
       include: [{
         model: this.ctx.model.User,
         as: 'user',
-        attributes: [ 'id', 'username' ],
+        attributes: [ 'id', 'username','avatar' ],
         include: [{
           model: this.ctx.model.Authority,
           attributes: [ 'id', 'name' ],

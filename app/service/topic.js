@@ -63,7 +63,7 @@ class TopicService extends Service {
       include: [{
         model: this.ctx.model.User,
         as: 'user',
-        attributes: [ 'id', 'username' ],
+        attributes: [ 'id', 'username','avatar' ],
         include: [{
           model: this.ctx.model.Authority,
           attributes: [ 'id', 'name' ],
@@ -125,7 +125,7 @@ class TopicService extends Service {
       include: [{
         model: this.ctx.model.User,
         as: 'user',
-        attributes: [ 'id', 'username' ],
+        attributes: [ 'id', 'username','avatar' ],
         include: [{
           model: this.ctx.model.Authority,
           attributes: [ 'id', 'name' ],
@@ -136,7 +136,7 @@ class TopicService extends Service {
         attributes: [ 'id', 'content', 'created_at', 'updated_at' ],
         include: [{
           model: this.ctx.model.User,
-          attributes: [ 'username' ],
+          attributes: [ 'id', 'username','avatar' ],
         }],
       }],
     });
@@ -160,7 +160,7 @@ class TopicService extends Service {
       include: [{
         model: this.ctx.model.User,
         as: 'user',
-        attributes: [ 'id', 'username' ],
+        attributes: [ 'id', 'username','avatar' ],
         include: [{
           model: this.ctx.model.Authority,
           attributes: [ 'id', 'name' ],

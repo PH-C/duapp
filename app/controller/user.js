@@ -30,6 +30,16 @@ class UserController extends Controller {
     });
   }
 
+  async updateLoginUser(){
+    const {
+      ctx,
+    } = this;
+    const user = ctx.request.body;
+    ctx.body = await ctx.service.user.updateLoginUser({
+      user,
+    });
+  }
+
   async recharge(){
     const {
       ctx,
@@ -82,6 +92,13 @@ class UserController extends Controller {
     } = this;
     const id = +ctx.params.id;
     ctx.body = await ctx.service.user.find(id);
+  }
+
+  async findLoginUser(){
+    const {
+      ctx,
+    } = this;
+    ctx.body = await ctx.service.user.findLoginUser();
   }
 }
 
