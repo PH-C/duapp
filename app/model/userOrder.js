@@ -25,6 +25,9 @@ module.exports = app => {
       allowNull: false, 
       defaultValue: 1
     },
+    address:{
+      type: STRING
+    },
     created_at: DATE,
     updated_at: DATE,
   });

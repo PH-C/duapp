@@ -7,6 +7,7 @@ module.exports = app => {
   require('./router/home')(app);
   require('./router/topic')(app);
   require('./router/product')(app);
+  require('./router/address')(app);
   require('./router/userSell')(app);
   require('./router/userOrder')(app);
   require('./router/collect')(app);
