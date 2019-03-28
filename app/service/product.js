@@ -34,6 +34,7 @@ class ProductService extends Service {
   async index({
     page = 1,
     pageSize = 10,
+    name = "",
     brand = "",
     series = "",
     isHot = "",
@@ -58,6 +59,14 @@ class ProductService extends Service {
       ],
       where: {}
     };
+    if(name){
+      options.where = {
+        ...options.where,
+        name: {
+          [Op.like]: `%${name}%`,
+        },
+      }
+    }
     if (brand) {
       options.where = {
         ...options.where,
@@ -92,7 +101,29 @@ class ProductService extends Service {
 
     console.log("options", options)
    
-    const res = await this.ctx.model.Product.findAndCountAll(options);
+    const res = await this.ctx.model.Product.findAndCountAll(Object.assign(options,{
+      include: [{
+        model: this.ctx.model.UserSell,
+        as: 'sellist',
+        where:{
+          sellState:0
+        },
+        order: [
+          ['price', 'ASC']
+        ],
+        separate: true,
+        limit:1
+       
+        // attributes: [ 'id', 'username' ],
+        // include: [{
+        //   model: this.ctx.model.Authority,
+        //   attributes: [ 'id', 'name' ],
+        // }],
+      }],
+    }))
+    // let minPrice = await this.ctx.model.Product.min('price', {
+    //   where:{...options.where}
+    // })
     return Object.assign(SUCCESS, {
       data: res,
     });
