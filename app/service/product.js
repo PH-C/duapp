@@ -152,7 +152,7 @@ class ProductService extends Service {
           sellState:0
         },
         order: [
-          ['price', 'ASC']
+          ['price', 'DESC']
         ],
         separate: true,
        
