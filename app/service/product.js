@@ -176,13 +176,7 @@ class ProductService extends Service {
 
   async find(id) {
     const user = this.ctx.session.user;
-    console.log("userId", user)
-    if(!user) {
-      return {
-        code:400,
-        msg:"未登录"
-      }
-    }
+   
     const product = await this.ctx.model.Product.findById(id, {
       include: [{
         model: this.ctx.model.UserSell,
@@ -211,18 +205,21 @@ class ProductService extends Service {
       });
     }
     let collect = false;
-    const col = await this.ctx.model.Collect.findOne({
-      where:{
-        user_id: user.id,
-        product_id: id
+    if(user){
+      const col = await this.ctx.model.Collect.findOne({
+        where:{
+          user_id: user.id,
+          product_id: id
+        }
+      })
+  
+      if(col){
+        collect = true
+      } else {
+        collect = false
       }
-    })
-
-    if(col){
-      collect = true
-    } else {
-      collect = false
     }
+   
     return Object.assign(SUCCESS, {
       data: product,
       collect
