@@ -133,7 +133,7 @@ class TopicService extends Service {
       }, {
         model: this.ctx.model.Comment,
         as: 'comment',
-        attributes: [ 'id', 'content', 'created_at', 'updated_at' ],
+        attributes: [ 'id', 'content','like', 'created_at', 'updated_at' ],
         include: [{
           model: this.ctx.model.User,
           attributes: [ 'id', 'username','avatar' ],
