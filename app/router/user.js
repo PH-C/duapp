@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = app => {
+  app.get('/api/users', 'user.findAll');
   app.get('/api/users/current', 'user.findLoginUser');
   app.post('/api/users/register', 'user.create');
   app.del('/api/users/:id', 'user.destroy');

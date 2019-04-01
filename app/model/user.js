@@ -3,9 +3,11 @@
 module.exports = app => {
   const {
     INTEGER,
+    TINYINT,
     STRING,
     DATE,
     FLOAT,
+    BOOLEAN,
   } = app.Sequelize;
 
   const User = app.model.define('user', {
@@ -26,6 +28,10 @@ module.exports = app => {
     money: {
       type: FLOAT,
       allowNull: false, 
+      defaultValue: 0
+    },
+    state:{
+      type: TINYINT, 
       defaultValue: 0
     },
     created_at: DATE,

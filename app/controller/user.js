@@ -18,6 +18,14 @@ class UserController extends Controller {
     ctx.body = await ctx.service.user.del(id);
   }
 
+  async findAll(){
+    const {
+      ctx,
+    } = this;
+    const res = await ctx.service.user.findAll(ctx.query);
+    ctx.body = res;
+  }
+
   async update() {
     const {
       ctx,

@@ -80,10 +80,13 @@ class UserService extends Service {
           msg: 'user not found',
         });
       }
-      const md5Passwd = md5(user.password)
-      user = Object.assign(user, {
-        password: md5Passwd,
-      });
+      if(user.password){
+        const md5Passwd = md5(user.password)
+        user = Object.assign(user, {
+          password: md5Passwd,
+        });
+      }
+     
       const res = await userDB.update(user);
       ctx.status = 200;
       return Object.assign(SUCCESS, {
@@ -349,6 +352,45 @@ class UserService extends Service {
     } catch (error) {
       throw (500);
     }
+  }
+
+  async findAll({
+    page = 1,
+    pageSize = 10,
+    order_by = 'created_at',
+    order = 'DESC',
+    state = ""
+  }) {
+   
+    const {
+      Op,
+    } = this.app.Sequelize;
+    pageSize = pageSize || 10                           //一页多少条
+    const currentPage = page || 1                  //设置当前页默认第一页
+    const skipNum = (currentPage - 1) * pageSize   //跳过数
+    const options = {
+      offset: parseInt(skipNum),
+      limit: parseInt(pageSize),
+      order: [
+        [ order_by, order.toUpperCase() ],
+      ],
+      where:{}
+    };
+    if (state) {
+      options.where = {
+        state: state
+      };
+    }
+   
+    const res = await this.ctx.model.User.findAndCountAll(Object.assign(options, {
+        include: [{
+          model: this.ctx.model.Authority,
+          attributes: [ 'id', 'name' ],
+        }],
+    }));
+    return Object.assign(SUCCESS, {
+      data: res,
+    });
   }
 
   async findLoginUser(){
