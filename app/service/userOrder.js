@@ -257,8 +257,41 @@ class UserOrderService extends Service {
       userSell.update({
         sellState:updates.orderState
       })
+
+      const userDB = await this.ctx.model.User.findById(userSell.user_id);
+      if (!userDB) {
+        ctx.status = 400;
+        return Object.assign(ERROR, {
+          msg: "user not found can't add money to seller"
+        });
+      }
+
+      if(UserOrder.price){
+        money = UserOrder.price + userDB.money
+      }
+     
+      const res = await userDB.update({ money: money});
+    }
+    if(updates.orderState===4){
+      const userSell = await this.ctx.model.UserSell.findById(UserOrder.usersell_id);
+      userSell.update({
+        sellState:updates.orderState
+      })    
     }
     UserOrder.update(updates);
+    const buyer = await this.ctx.model.User.findById(UserOrder.user_id);
+    if (!buyer) {
+      ctx.status = 400;
+      return Object.assign(ERROR, {
+        msg: "user not found can't return money to buyer"
+      });
+    }
+
+    if(UserOrder.price){
+      money = buyer.money + UserOrder.price 
+    }
+   
+    const res = await buyer.update({ money: money});
     return SUCCESS;
 
   }
